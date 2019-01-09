@@ -1,5 +1,5 @@
 {
-  "name": "aito-price-tool",
+  "name": "@aitodotai/aito-price-tool",
   "version": "0.1.0",
   "description": "Calculates Aito invoices",
   "main": "src/index.js",
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "publish": "np"
+    "publish": "np --no-yarn"
   },
   "repository": {
     "type": "git",
