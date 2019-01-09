@@ -1,0 +1,22 @@
+{
+  "name": "aito-price-tool",
+  "version": "0.1.0",
+  "description": "Calculates Aito invoices",
+  "main": "src/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AitoDotAI/aito-price-tool.git"
+  },
+  "author": "Aito Intelligence Oy",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/AitoDotAI/aito-price-tool/issues"
+  },
+  "homepage": "https://github.com/AitoDotAI/aito-price-tool#readme"
+}
