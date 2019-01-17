@@ -143,7 +143,7 @@ function calculateDataPrice(dataAmountInGb: number, dayCount: number, dataRangeL
 
 export function calculatePrice(dailyData: { dataUsage: number, totalCalls: number }[]) {
   const queryPrice: number = calculateQueryPrice(
-    dailyData.map(o => o.totalCalls).reduce((a, b) => a + b, 0),
+    dailyData.map(dayData => dayData.totalCalls).reduce((a, b) => a + b, 0),
     QUERY_LIMIT_RANGES,
     QUERY_PRICE_RANGES
   )
