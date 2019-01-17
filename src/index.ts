@@ -141,9 +141,16 @@ function calculateDataPrice(dataAmountInGb: number, dayCount: number, dataRangeL
   return Math.max(price, MIN_DATA_PRICE) * dayCount;
 }
 
+export function calculatePrice(dailyData: { dataUsage: number, totalCalls: number }[]) {
+  const queryPrice: number = calculateQueryPrice(
+    dailyData.map(o => o.totalCalls).reduce((a, b) => a + b, 0),
+    QUERY_LIMIT_RANGES,
+    QUERY_PRICE_RANGES
+  )
+  
+  const dataPrice: number = dailyData.map(o => o.dataUsage)
+    .map(dayData => calculateDataPrice(dayData, 1, DATA_LIMIT_RANGES, DATA_PRICE_RANGES))
+    .reduce((a, b) => a + b, 0)
 
-export function calculatePrice(queriesCount: number, dataAmount: number, dayCount: number) {
-  const dataPrice = calculateDataPrice(dataAmount, dayCount, DATA_LIMIT_RANGES, DATA_PRICE_RANGES)
-  const queriesPrice = calculateQueryPrice(queriesCount, QUERY_LIMIT_RANGES, QUERY_PRICE_RANGES)
-  return dataPrice + queriesPrice
+  return Math.round((queryPrice + dataPrice) * 100) / 100
 }
