@@ -65,7 +65,7 @@ export const MIN_DATA_PRICE = Math.round(DATA_PRICE_RANGES[0]);
  * @return {Number} Price in euros.
  * @customfunction
  */
-function calculateQueryPrice(queryCount: number, queryRangeLimits: number[], pricingForRangeLimits: number[]) {
+export function calculateQueryPrice(queryCount: number, queryRangeLimits: number[], pricingForRangeLimits: number[]) {
   if (queryRangeLimits.length !== pricingForRangeLimits.length) {
     throw new Error('queryRangeLimits and pricingForRangeLimits have same amount of elements');
   }
@@ -108,7 +108,7 @@ function calculateQueryPrice(queryCount: number, queryRangeLimits: number[], pri
  * @return {Number} Price in euros.
  * @customfunction
  */
-function calculateDataPrice(dataAmountInGb: number, dayCount: number, dataRangeLimits: number[], pricingPerDayForRangeLimits: number[]) {
+export function calculateDataPrice(dataAmountInGb: number, dayCount: number, dataRangeLimits: number[], pricingPerDayForRangeLimits: number[]) {
   if (dataRangeLimits.length !== pricingPerDayForRangeLimits.length) {
     throw new Error('queryRangeLimits and pricingPerDayForRangeLimits have same amount of elements');
   }
