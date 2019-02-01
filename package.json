@@ -9,8 +9,6 @@
   "scripts": {
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
-    "prepublish": "npm run lint",
-    "publish": "npm run build && np --no-yarn",
     "build": "tsc"
   },
   "publishConfig": {
