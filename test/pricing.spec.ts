@@ -39,4 +39,29 @@ describe('Pricing module', () => {
     expect(Calculator.calculatePrice([new DailyUsage(0, -1)])).to.equal(minPriceForDay)
   })
 
+  it('should calculate max and average queries', () => {
+    const day1 = new DailyUsage(0, 333)
+    const day2 = new DailyUsage(0, 334)
+    const day3 = new DailyUsage(0, 334)
+
+    expect(Calculator.calculateNumberOfQueries([day1, day2, day3])).to.equal(1001)
+    expect(Calculator.calculateAverageNumberOfQueries([day1, day2, day3])).to.be.within(333, 334)
+  })
+
+  it('should calculate the max data correctly', () => {
+    const day1 = new DailyUsage(11, 0)
+    const day2 = new DailyUsage(23, 0)
+    const day3 = new DailyUsage(13, 0)
+
+    expect(Calculator.calculateMaxData([day1, day2, day3])).to.equal(23)
+  })
+
+  it('should calculate the average data correctly', () => {
+    const day1 = new DailyUsage(1, 0)
+    const day2 = new DailyUsage(2, 0)
+    const day3 = new DailyUsage(3, 0)
+
+    expect(Calculator.calculateAverageData([day1, day2, day3])).to.equal(2)
+  })
+
 })

@@ -156,7 +156,32 @@ function calculateDataPrice(dataAmountInGb: number, dayCount: number,
   return Math.max(price, MIN_DATA_PRICE) * dayCount
 }
 
-export function calculatePrice(dailyData: DailyUsage[]) {
+function sumOfArray(array: number[]): number {
+  return array.reduce((a, b) => a + b, 0)
+}
+
+function averageOfArray(array: number[]): number {
+  return sumOfArray(array) / (1.0 * array.length)
+}
+
+export function calculateNumberOfQueries(dailyData: DailyUsage[]): number {
+  return sumOfArray(dailyData.map(dd => dd.totalCalls))
+}
+
+export function calculateAverageNumberOfQueries(dailyData: DailyUsage[]): number {
+  return averageOfArray(dailyData.map(dd => dd.totalCalls))
+}
+
+export function calculateMaxData(dailyData: DailyUsage[]): number {
+  const dailyUsages = dailyData.map(dd => dd.dataUsage)
+  return Math.max(...dailyUsages)
+}
+
+export function calculateAverageData(dailyData: DailyUsage[]): number {
+  return averageOfArray(dailyData.map(dd => dd.dataUsage))
+}
+
+export function calculatePrice(dailyData: DailyUsage[]): number {
   const queryPrice: number = calculateQueryPrice(
     dailyData.map(dayData => dayData.totalCalls).reduce((a, b) => a + b, 0),
     QUERY_LIMIT_RANGES,
