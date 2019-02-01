@@ -27,6 +27,14 @@ describe('Pricing module', () => {
     expect(Calculator.calculatePrice([new DailyUsage(0, 1001)])).to.equal(minPriceForDay + minPricePerQuery)
   })
 
+  it('should start accumulating query costs after 1000 divided on multiple days', () => {
+    const day1 = new DailyUsage(0, 333)
+    const day2 = new DailyUsage(0, 334)
+    const day3 = new DailyUsage(0, 334)
+
+    expect(Calculator.calculatePrice([day1, day2, day3])).to.equal(3 * minPriceForDay + minPricePerQuery)
+  })
+
   it('should not break for invalid numbers', () => {
     expect(Calculator.calculatePrice([new DailyUsage(0, -1)])).to.equal(minPriceForDay)
   })
