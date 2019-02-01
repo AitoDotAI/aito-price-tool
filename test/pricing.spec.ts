@@ -8,5 +8,4 @@ describe('Pricing module', () => {
   it('should give prize 0 for empty array', () => {
     expect(calculatePrice([])).to.equal(0)
   })
-
-});
+})
