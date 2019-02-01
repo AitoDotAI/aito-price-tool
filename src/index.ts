@@ -54,7 +54,7 @@ export const DATA_PRICE_RANGES = [
   0.00585937,
 ]
 
-class DailyUsage {
+export class DailyUsage {
   public dataUsage: number
   public totalCalls: number
 
