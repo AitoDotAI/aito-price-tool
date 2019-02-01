@@ -1,6 +1,6 @@
 {
   "name": "@aitodotai/aito-price-tool",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Calculates Aito invoices",
   "main": "dist/index.js",
   "directories": {
