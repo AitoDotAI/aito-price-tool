@@ -7,6 +7,9 @@
     "test": "test"
   },
   "scripts": {
+    "clean": "rm -r ./dist",
+    "prenp": "npm run clean && npm run build",
+    "np": "np --no-yarn",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
     "build": "tsc"
