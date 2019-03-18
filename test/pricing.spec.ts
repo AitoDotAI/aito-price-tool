@@ -63,5 +63,4 @@ describe('Pricing module', () => {
 
     expect(Calculator.calculateAverageData([day1, day2, day3])).to.equal(2)
   })
-
 })
