@@ -13,7 +13,6 @@ describe('Pricing module', () => {
   })
 
   it('should give min price for single min data', () => {
-
     expect(Calculator.calculatePrice([new DailyUsage(0, 0)])).to.equal(minPriceForDay)
   })
 
@@ -63,5 +62,4 @@ describe('Pricing module', () => {
 
     expect(Calculator.calculateAverageData([day1, day2, day3])).to.equal(2)
   })
-
 })

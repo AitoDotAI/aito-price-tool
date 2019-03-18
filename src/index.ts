@@ -156,8 +156,8 @@ function calculateDataPrice(dataAmountInGb: number, dayCount: number,
   return Math.max(price, MIN_DATA_PRICE) * dayCount
 }
 
-function sumOfArray(array: number[]): number {
-  return array.reduce((a, b) => a + b, 0)
+export function sumOfArray(array: number[]): number {
+  return array.filter(n => !isNaN(n)).reduce((a, b) => a + b, 0)
 }
 
 function averageOfArray(array: number[]): number {
@@ -183,14 +183,13 @@ export function calculateAverageData(dailyData: DailyUsage[]): number {
 
 export function calculatePrice(dailyData: DailyUsage[]): number {
   const queryPrice: number = calculateQueryPrice(
-    dailyData.map(dayData => dayData.totalCalls).reduce((a, b) => a + b, 0),
+    sumOfArray(dailyData.map(dayData => dayData.totalCalls)),
     QUERY_LIMIT_RANGES,
     QUERY_PRICE_RANGES,
   )
 
-  const dataPrice: number = dailyData.map(o => o.dataUsage)
-    .map(dayData => calculateDataPrice(dayData, 1, DATA_LIMIT_RANGES, DATA_PRICE_RANGES))
-    .reduce((a, b) => a + b, 0)
+  const dataPrice: number = sumOfArray(dailyData.map(o => o.dataUsage)
+    .map(dayData => calculateDataPrice(dayData, 1, DATA_LIMIT_RANGES, DATA_PRICE_RANGES)))
 
   return Math.round((queryPrice + dataPrice) * 100) / 100
 }
