@@ -13,7 +13,6 @@ describe('Pricing module', () => {
   })
 
   it('should give min price for single min data', () => {
-
     expect(Calculator.calculatePrice([new DailyUsage(0, 0)])).to.equal(minPriceForDay)
   })
 
