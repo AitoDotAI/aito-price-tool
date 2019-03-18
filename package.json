@@ -10,7 +10,9 @@
     "clean": "rm -r ./dist",
     "prenp": "npm run clean && npm run build",
     "np": "np --no-yarn",
-    "test": "mocha -r ts-node/register test/**/*.spec.ts",
+    "test": "npm run testTs && npm run testCommonJs",
+    "testTs": "mocha -r ts-node/register test/**/*.spec.ts",
+    "testCommonJs": "npm run build && mocha --compilers js:@babel/register test/**/*.spec.js",
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
     "build": "tsc"
   },
@@ -28,6 +30,11 @@
   },
   "homepage": "https://github.com/AitoDotAI/aito-price-tool#readme",
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/register": "^7.0.0",
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.5",
     "chai": "^4.2.0",
