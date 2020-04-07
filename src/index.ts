@@ -11,7 +11,7 @@ export interface IProductConfig {
  */
 export const PRODUCT_CONFIG: { [key in Product]: IProductConfig } = {
   SANDBOX: { price: 0 * EURO },
-  DEVELOPER: { price: 29 * EURO },
+  DEVELOPER: { price: 39 * EURO },
   PRODUCTION: { price: 249 * EURO },
   PLUS_ONE_GB: { price: 49 * EURO },
 }

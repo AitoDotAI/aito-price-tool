@@ -49,7 +49,7 @@ describe('Pricing module', () => {
 
   it('should calculate prices for combined products', () => {
     expect(Calculator.calculatePrice(['PRODUCTION', 'PLUS_ONE_GB'], 1)).to.equal(24900 + 4900)
-    expect(Calculator.calculatePrice(['PRODUCTION', 'DEVELOPER'], 1)).to.equal(24900 + 2900)
+    expect(Calculator.calculatePrice(['PRODUCTION', 'DEVELOPER'], 1)).to.equal(24900 + 3900)
   })
 
   it('should calculate prices for random ordered combined products', () => {
