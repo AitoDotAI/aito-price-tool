@@ -1,3 +1,5 @@
+import Dinero from 'dinero.js'
+
 import {
   assert,
   expect
@@ -7,6 +9,11 @@ import 'mocha'
 import * as Calculator from '../src/index'
 
 describe('Pricing module', () => {
+  const twoFourNine = Dinero({ amount: 249 * 100, currency: 'EUR' })
+  const thirtyNine = Dinero({ amount: 39 * 100, currency: 'EUR' })
+  const fourtyNine = Dinero({ amount: 49 * 100, currency: 'EUR' })
+
+  const zeroPrice = Dinero({ amount: 0, currency: 'EUR'})
 
   const invalidProductSetups: Calculator.Product[][] = [
     ['SANDBOX', 'PLUS_ONE_GB'],
@@ -17,18 +24,27 @@ describe('Pricing module', () => {
   ]
 
   it('should give prize 0 for empty array', () => {
-    expect(Calculator.calculatePrice([], 1)).to.equal(0)
-    expect(Calculator.calculatePrice([], 10000)).to.equal(0)
+    let price = Calculator.calculatePrice([], 1)
+    expect(price.totalAmount.equalsTo(zeroPrice)).to.equal(true)
+
+    price = Calculator.calculatePrice([], 10000)
+    expect(price.totalAmount.equalsTo(zeroPrice)).to.equal(true)
   })
 
   it('should charge nothing for sandbox', () => {
-    expect(Calculator.calculatePrice(['SANDBOX'], 1)).to.equal(0)
-    expect(Calculator.calculatePrice(['SANDBOX'], 10)).to.equal(0)
-    expect(Calculator.calculatePrice(['SANDBOX'], 100000000)).to.equal(0)
+    let price = Calculator.calculatePrice(['SANDBOX'], 1)
+    expect(price.totalAmount.equalsTo(zeroPrice)).to.equal(true)
+
+    price = Calculator.calculatePrice(['SANDBOX'], 10)
+    expect(price.totalAmount.equalsTo(zeroPrice)).to.equal(true)
+
+    price = Calculator.calculatePrice(['SANDBOX'], 100000000)
+    expect(price.totalAmount.equalsTo(zeroPrice)).to.equal(true)
   })
 
   it('should not charge anything for no time', () => {
-    expect(Calculator.calculatePrice(['PRODUCTION'], 0)).to.equal(0)
+    expect(Calculator.calculatePrice(['PRODUCTION'], 0).
+      totalAmount.equalsTo(zeroPrice)).to.equal(true)
   })
 
   it('should throw error for invalid time', () => {
@@ -54,23 +70,34 @@ describe('Pricing module', () => {
   })
 
   it('should calculate prices for single products', () => {
-    expect(Calculator.calculatePrice(['PRODUCTION'], 1)).to.equal(24900)
+    const price = Calculator.calculatePrice(['PRODUCTION'], 1)
+
+    expect(price.totalAmount.equalsTo(twoFourNine)).to.equal(true)
+    expect(price.vatAmount.equalsTo(zeroPrice)).to.equal(true)
+
+    expect(price.vatPercentage).to.equal(0)
   })
 
   it('should calculate prices for combined products', () => {
-    expect(Calculator.calculatePrice(['PRODUCTION', 'PLUS_ONE_GB'], 1)).to.equal(24900 + 4900)
-    expect(Calculator.calculatePrice(['PRODUCTION', 'DEVELOPER'], 1)).to.equal(24900 + 3900)
+    const prodPlusGigabyte = Calculator.calculatePrice(['PRODUCTION', 'PLUS_ONE_GB'], 1)
+    expect(prodPlusGigabyte.productAmount.equalsTo(twoFourNine.add(fourtyNine))).
+      to.equal(true)
+
+    const prodPlusDeveloper = Calculator.calculatePrice(['PRODUCTION', 'DEVELOPER'], 1)
+    expect(prodPlusDeveloper.productAmount.equalsTo(twoFourNine.add(thirtyNine))).
+      to.equal(true)
   })
 
   it('should calculate prices for random ordered combined products', () => {
     expect(Calculator.calculatePrice(
-      ['PLUS_ONE_GB', 'PRODUCTION', 'PLUS_ONE_GB', 'DEVELOPER', 'SANDBOX'], 1)).to.be.greaterThan(0)
+      ['PLUS_ONE_GB', 'PRODUCTION', 'PLUS_ONE_GB', 'DEVELOPER', 'SANDBOX'], 1).productAmount.getAmount()).
+        to.be.greaterThan(0)
 
     expect(Calculator.calculatePrice(
-      ['SANDBOX', 'DEVELOPER', 'DEVELOPER'], 1)).to.be.greaterThan(0)
+      ['SANDBOX', 'DEVELOPER', 'DEVELOPER'], 1).productAmount.getAmount()).to.be.greaterThan(0)
 
     expect(Calculator.calculatePrice(
       ['PLUS_ONE_GB', 'PRODUCTION', 'PRODUCTION', 'PRODUCTION', 'PRODUCTION'],
-      1)).to.be.greaterThan(0)
+      1).productAmount.getAmount()).to.be.greaterThan(0)
   })
 })
