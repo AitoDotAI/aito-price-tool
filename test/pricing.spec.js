@@ -1,30 +1,68 @@
+import Dinero from 'dinero.js'
+
 import {
   expect,
   fail
 } from 'chai'
 import 'mocha'
 
+import { Product } from '../dist/src/index'
 import * as Calculator from '../dist/src/index'
 
-
 describe('Pricing module', () => {
+  const twoFourNine = Dinero({
+    amount: 249 * 100,
+    currency: 'EUR'
+  })
+  const thirtyNine = Dinero({
+    amount: 39 * 100,
+    currency: 'EUR'
+  })
+  const fourtyNine = Dinero({
+    amount: 49 * 100,
+    currency: 'EUR'
+  })
+
+  const zeroPrice = Dinero({
+    amount: 0,
+    currency: 'EUR'
+  })
 
   const invalidProductSetups = [
-    ['SANDBOX', 'PLUS_ONE_GB'],
-    ['DEVELOPER', 'PLUS_ONE_GB'],
-    ['PLUS_ONE_GB'],
-    ['PLUS_ONE_GB', 'PLUS_ONE_GB'],
-    ['PLUS_ONE_GB', 'PLUS_ONE_GB', 'PLUS_ONE_GB'],
+    [Product.Sandbox, Product.PlusOneGigabyte],
+    [Product.Developer, Product.PlusOneGigabyte],
+    [Product.PlusOneGigabyte],
+    [Product.PlusOneGigabyte, Product.PlusOneGigabyte],
+    [Product.PlusOneGigabyte, Product.PlusOneGigabyte, Product.PlusOneGigabyte],
   ]
 
   it('should give prize 0 for empty array', () => {
-    expect(Calculator.calculatePrice([])).to.equal(0)
+    let price = Calculator.calculatePrice([], 1)
+    expect(price.totalAmount.equalsTo(zeroPrice)).to.equal(true)
+
+    price = Calculator.calculatePrice([], 10000)
+    expect(price.totalAmount.equalsTo(zeroPrice)).to.equal(true)
+  })
+
+  it('should charge nothing for sandbox', () => {
+    let price = Calculator.calculatePrice([Product.Sandbox], 1)
+    expect(price.totalAmount.equalsTo(zeroPrice)).to.equal(true)
+
+    price = Calculator.calculatePrice([Product.Sandbox], 10)
+    expect(price.totalAmount.equalsTo(zeroPrice)).to.equal(true)
+
+    price = Calculator.calculatePrice([Product.Sandbox], 100000000)
+    expect(price.totalAmount.equalsTo(zeroPrice)).to.equal(true)
+  })
+
+  it('should not charge anything for no time', () => {
+    expect(Calculator.calculatePrice([Product.Production], 0).totalAmount.equalsTo(zeroPrice)).to.equal(true)
   })
 
   it('should throw error for invalid time', () => {
     try {
-      expect(Calculator.calculatePrice(['SANDBOX'], -1)).to.be.within(333, 334)
-      fail(`Accepted negative time (-1)`)
+      Calculator.calculatePrice([Product.Sandbox], -1)
+      assert.fail(`Accepted negative time (-1)`)
     } catch (error) {
       expect(error.message).to.contain('negative time')
       // passed
@@ -44,17 +82,34 @@ describe('Pricing module', () => {
   })
 
   it('should calculate prices for single products', () => {
-    expect(Calculator.calculatePrice(['PRODUCTION'], 1)).to.equal(24900)
+    const price = Calculator.calculatePrice([Product.Production], 1)
+
+    expect(price.totalAmount.equalsTo(twoFourNine)).to.equal(true)
+    expect(price.vatAmount.equalsTo(zeroPrice)).to.equal(true)
+
+    expect(price.vatPercentage).to.equal(0)
   })
 
   it('should calculate prices for combined products', () => {
-    expect(Calculator.calculatePrice(['PRODUCTION', 'PLUS_ONE_GB'], 1)).to.equal(24900 + 4900)
-    expect(Calculator.calculatePrice(['PRODUCTION', 'DEVELOPER'], 1)).to.equal(24900 + 3900)
+    const prodPlusGigabyte = Calculator.calculatePrice([Product.Production, Product.PlusOneGigabyte], 1)
+    expect(prodPlusGigabyte.productAmount.equalsTo(twoFourNine.add(fourtyNine))).
+    to.equal(true)
+
+    const prodPlusDeveloper = Calculator.calculatePrice([Product.Production, Product.Developer], 1)
+    expect(prodPlusDeveloper.productAmount.equalsTo(twoFourNine.add(thirtyNine))).
+    to.equal(true)
   })
 
   it('should calculate prices for random ordered combined products', () => {
-    expect(Calculator.calculatePrice(['PLUS_ONE_GB', 'PRODUCTION', 'PLUS_ONE_GB', 'DEVELOPER', 'SANDBOX'], 1)).to.be.greaterThan(0)
-    expect(Calculator.calculatePrice(['SANDBOX', 'DEVELOPER', 'DEVELOPER'], 1)).to.be.greaterThan(0)
-    expect(Calculator.calculatePrice(['PLUS_ONE_GB', 'PRODUCTION', 'PRODUCTION', 'PRODUCTION', 'PRODUCTION'], 1)).to.be.greaterThan(0)
+    expect(Calculator.calculatePrice(
+      [Product.PlusOneGigabyte, Product.Production, Product.PlusOneGigabyte, Product.Developer, Product.Sandbox], 1).productAmount.getAmount()).
+    to.be.greaterThan(0)
+
+    expect(Calculator.calculatePrice(
+      [Product.Sandbox, Product.Developer, Product.Developer], 1).productAmount.getAmount()).to.be.greaterThan(0)
+
+    expect(Calculator.calculatePrice(
+      [Product.PlusOneGigabyte, Product.Production, Product.Production, Product.Production, Product.Production],
+      1).productAmount.getAmount()).to.be.greaterThan(0)
   })
 })
