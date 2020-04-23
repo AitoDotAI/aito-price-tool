@@ -1,7 +1,12 @@
 // tslint:disable:object-literal-sort-keys
 import Dinero from 'dinero.js'
 
-export type Product = 'SANDBOX' | 'DEVELOPER' | 'PRODUCTION' | 'PLUS_ONE_GB'
+export enum Product {
+  Sandbox = 'SANDBOX',
+  Developer = 'DEVELOPER',
+  Production = 'PRODUCTION',
+  PlusOneGigabyte = 'PLUS_ONE_GB',
+}
 
 const EURO = 100
 
@@ -49,7 +54,7 @@ function assertProductSetup(products: Product[] = []): boolean {
     throw new Error(`Invalid. Undefined or null products.`)
   }
 
-  if (products.indexOf('PLUS_ONE_GB') !== -1 && products.indexOf('PRODUCTION') === -1) {
+  if (products.indexOf(Product.PlusOneGigabyte) !== -1 && products.indexOf(Product.Production) === -1) {
     throw new Error(`Additional data can only be bought for the production subscription (${products.join(', ')})`)
   }
 
