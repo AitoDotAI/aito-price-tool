@@ -85,7 +85,7 @@ export function calculatePrice(
     reduce((a: Dinero.Dinero, b: Dinero.Dinero) => a.add(b), ZERO_PRICE)
 
   const productPriceOverMonths = basePrice.multiply(months)
-  const vatAmount = basePrice.multiply(vatPercentage).divide(100)
+  const vatAmount = basePrice.multiply(vatPercentage, 'HALF_UP').divide(100, 'HALF_UP')
 
   return {
     totalAmount: productPriceOverMonths.add(vatAmount),

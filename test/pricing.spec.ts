@@ -100,4 +100,25 @@ describe('Pricing module', () => {
       ['PLUS_ONE_GB', 'PRODUCTION', 'PRODUCTION', 'PRODUCTION', 'PRODUCTION'],
       1).productAmount.getAmount()).to.be.greaterThan(0)
   })
+
+  it('should return the vat amount and percentage as part of the response', () => {
+    const price = Calculator.calculatePrice(['PRODUCTION'], 1, 24)
+
+    expect(price.productAmount.equalsTo(twoFourNine)).to.equal(true)
+    expect(price.vatPercentage).to.equal(24)
+
+    expect(price.vatAmount.getAmount()).to.equal(5976)
+    expect(price.vatAmount.getCurrency()).to.equal('EUR')
+
+    expect(price.totalAmount.getAmount()).to.equal(24900 + 5976)
+  })
+
+  it('should round vat sum up by default', () => {
+    const price = Calculator.calculatePrice(['DEVELOPER'], 1, 1.5)
+
+    expect(price.vatPercentage).to.equal(1.5)
+
+    expect(price.vatAmount.getAmount()).to.equal(59)
+    expect(price.vatAmount.getCurrency()).to.equal('EUR')
+  })
 })
