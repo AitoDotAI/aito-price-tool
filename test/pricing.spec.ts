@@ -123,4 +123,21 @@ describe('Pricing module', () => {
     expect(price.vatAmount.getAmount()).to.equal(59)
     expect(price.vatAmount.getCurrency()).to.equal('EUR')
   })
+
+  describe(' without product validation ', () => {
+    it('should allow calculation of prices for invalid product setups', () => {
+      for (const ips of invalidProductSetups) {
+        const price = Calculator.calculatePrice(ips, 1, 0, false)
+        expect(price.totalAmount.getAmount()).to.be.greaterThan(0)
+      }
+    })
+
+    it('should allow getting just the price of data', () => {
+      const dataArray: Product[] = Array(4)
+      dataArray.fill(Product.PlusOneGigabyte, 0, 4)
+
+      const price = Calculator.calculatePrice(dataArray, 1, 0, false)
+      expect(price.totalAmount.getAmount()).to.equal(196 * 100)
+    })
+  })
 })

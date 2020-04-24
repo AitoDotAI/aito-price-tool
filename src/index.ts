@@ -72,8 +72,11 @@ export function calculatePrice(
   products: Product[],
   months: number,
   vatPercentage: number = 0,
+  withProductAssertions: boolean = true,
 ): ITotalPrice {
-  assertProductSetup(products)
+  if (withProductAssertions) {
+    assertProductSetup(products)
+  }
   assertUsageTime(months)
   assertVatIsPercent(vatPercentage)
 
